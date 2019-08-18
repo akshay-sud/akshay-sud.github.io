@@ -28,10 +28,17 @@
 
     function getAPI(){
       var api1 = 'https://cors-anywhere.herokuapp.com/https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/';
-      var api2 = '?api_key=RGAPI-064a74d2-5e69-4ec0-bca0-c03ffd472a55';
+      var api2 = '?api_key=';
+      var apiKey;
       var summName = document.getElementById("textbox").value;
 
-      var summNameCall = api1 + summName + api2;
+      fetch('key.txt')
+      .then((res) => res.text())
+      .then((data) => {
+        apiKey = data;
+      })
+      
+      var summNameCall = api1 + summName + api2 + apiKey;
 
       fetch(summNameCall)
       .then((res) => res.json())
