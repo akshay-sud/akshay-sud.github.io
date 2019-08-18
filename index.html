@@ -8,16 +8,26 @@
 </head>
 <body>
   <button id = "getText">Get Text</button>
+  <button id = "getAPI">Get API Data</button>
   <div id='output'></div>
 
   <script>
     document.getElementById('getText').addEventListener('click', getText);
+    document.getElementById('getAPI').addEventListener('click', getAPI);
 
     function getText() {
       fetch('sample.txt')
       .then((res) => res.text())
       .then((data) => {
         document.getElementById('output').innerHTML = data;
+      })
+    }
+
+    function getaAPI(){
+      fetch('https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/plant%20trees%20420?api_key=RGAPI-064a74d2-5e69-4ec0-bca0-c03ffd472a55')
+      .then((res) => res.json())
+      .then((data) => {
+        document.getElementById('output').innerHTML = data.name;
       })
     }
   </script>
