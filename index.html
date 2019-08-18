@@ -7,14 +7,16 @@
         </style>
 </head>
 <body>
-  <button id = "getText">Get Text</button>
+  Enter Summoner Name <input id = "textbox"></input>
   <button id = "getAPI">Get API Data</button>
-  <div id='output'></div>
+  <div id='name'></div>
+  <div id='level'></div>
+  <div id='mpts'></div>
 
   <script>
-    document.getElementById('getText').addEventListener('click', getText);
+    //document.getElementById('getText').addEventListener('click', getText);
     document.getElementById('getAPI').addEventListener('click', getAPI);
-
+    /*
     function getText() {
       fetch('sample.txt')
       .then((res) => res.text())
@@ -22,12 +24,22 @@
         document.getElementById('output').innerHTML = data;
       })
     }
+    */
 
     function getAPI(){
-      fetch('https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/plant%20trees%20420?api_key=RGAPI-064a74d2-5e69-4ec0-bca0-c03ffd472a55')
+      var api1 = 'https://cors-anywhere.herokuapp.com/https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/';
+      var api2 = '?api_key=RGAPI-064a74d2-5e69-4ec0-bca0-c03ffd472a55';
+      var summName = document.getElementById("textbox").value;
+
+      var summNameCall = api1 + summName + api2;
+
+      fetch(summNameCall)
       .then((res) => res.json())
       .then((data) => {
-        document.getElementById('output').innerHTML = data.name;
+        var sid = data.id;
+
+        document.getElementById('name').innerHTML = data.name;
+        document.getElementById('level').innerHTML = 'level ' + data.summonerLevel;
       })
     }
   </script>
