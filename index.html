@@ -36,6 +36,7 @@
       .then((res) => res.text())
       .then((data) => {
         apiKey = data;
+        console.log(apiKey);
       })
       
       var summNameCall = api1 + summName + api2 + apiKey;
