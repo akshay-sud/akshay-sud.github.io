@@ -14,40 +14,28 @@
   <div id='mpts'></div>
 
   <script>
-    //document.getElementById('getText').addEventListener('click', getText);
     document.getElementById('getAPI').addEventListener('click', getAPI);
-    /*
-    function getText() {
-      fetch('sample.txt')
-      .then((res) => res.text())
-      .then((data) => {
-        document.getElementById('output').innerHTML = data;
-      })
-    }
-    */
 
     function getAPI(){
       var api1 = 'https://cors-anywhere.herokuapp.com/https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/';
       var api2 = '?api_key=';
-      var apiKey;
       var summName = document.getElementById("textbox").value;
-
-      fetch('key.txt')
-      .then((res) => res.text())
-      .then((data) => {
-        apiKey = data;
-        console.log(apiKey);
-      })
       
-      var summNameCall = api1 + summName + api2 + apiKey;
+      var summNameCall = api1 + summName + api2;
 
-      fetch(summNameCall)
-      .then((res) => res.json())
-      .then((data) => {
-        var sid = data.id;
-
-        document.getElementById('name').innerHTML = data.name;
-        document.getElementById('level').innerHTML = 'level ' + data.summonerLevel;
+      fetch('key.txt').then(response => {
+        return response.text();
+      }).then(data => {
+        summNameCall = summNameCall + data;
+        console.log(summNameCall);
+        return fetch(summNameCall);
+      }).then(response => {
+        return response.json();
+      }).then(leagueData => {
+        var sid = leagueData.id;
+        console.log(sid);
+        document.getElementById('name').innerHTML = leagueData.name;
+        document.getElementById('level').innerHTML = 'level ' + leagueData.summonerLevel;
       })
     }
   </script>
