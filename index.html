@@ -27,13 +27,11 @@
         return response.text();
       }).then(data => {
         summNameCall = summNameCall + data;
-        console.log(summNameCall);
         return fetch(summNameCall);
       }).then(response => {
         return response.json();
       }).then(leagueData => {
         var sid = leagueData.id;
-        console.log(sid);
         document.getElementById('name').innerHTML = leagueData.name;
         document.getElementById('level').innerHTML = 'level ' + leagueData.summonerLevel;
       })
