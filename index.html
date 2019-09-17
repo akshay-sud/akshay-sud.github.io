@@ -27,6 +27,7 @@
         return response.text();
       }).then(data => {
         summNameCall = summNameCall + data;
+        console.log(data)
         return fetch(summNameCall);
       }).then(response => {
         return response.json();
