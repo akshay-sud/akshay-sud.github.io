@@ -7,35 +7,63 @@
         </style>
 </head>
 <body>
-  Enter Summoner Name <input id = "textbox"></input>
+  Enter Summoner Name <input id = "textbox"></input> <br />
+  Enter Champion Name <input id = "champText"></input>
   <button id = "getAPI">Get API Data</button>
+  <br />
   <div id='name'></div>
   <div id='level'></div>
   <div id='mpts'></div>
+  <div id='gamesPlayed'></div>
 
   <script>
     document.getElementById('getAPI').addEventListener('click', getAPI);
 
     function getAPI(){
-      var api1 = 'https://cors-anywhere.herokuapp.com/https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/';
+      var currTime = new Date().getTime();
+      var beginTime = currTime - 604800000
+      var k;
+
+      var api1 = 'https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/';
       var api2 = '?api_key=';
       var summName = document.getElementById("textbox").value;
       
       var summNameCall = api1 + summName + api2;
 
+      var championID = 28 // test with SAVE THE OCEAN
+
+      var matchIDs;
+
       fetch('key.txt').then(response => {
         return response.text();
       }).then(data => {
         summNameCall = summNameCall + data;
-        console.log(data)
-        return fetch(summNameCall);
+        k = data;
+        // summoner 1 data req/parsing
+        return fetch(summNameCall, { mode: 'cors'});
       }).then(response => {
         return response.json();
       }).then(leagueData => {
         var sid = leagueData.id;
+        summName = leagueData.name;
         document.getElementById('name').innerHTML = leagueData.name;
         document.getElementById('level').innerHTML = 'level ' + leagueData.summonerLevel;
+
+        var apiMatchCall = 'https://na1.api.riotgames.com/lol/match/v4/matchlists/by-account/' + leagueData.accountId
+        + '?champion=' + championID.toString() + '&queue=420&endTime=' + currTime.toString() + '&beginTime=' + beginTime.toString() + '&api_key=' + k;
+        console.log(apiMatchCall)
+        return fetch(apiMatchCall, { mode: 'cors'});
+      }).then(response => {
+        return response.json();
+      }).then(summonerMatches => {
+        if (summonerMatches.totalGames == undefined) {
+          document.getElementById('gamesPlayed').innerHTML = 'No games played on this Champion in the last 7 days'
+        }
+        else {
+          document.getElementById('gamesPlayed').innerHTML = summName + ' has played ' + summonerMatches.totalGames + ' games on Evelynn in the last 7 days';
+        }
       })
+
     }
   </script>
 </body>
