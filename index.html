@@ -48,10 +48,11 @@
         summName = leagueData.name;
         document.getElementById('name').innerHTML = leagueData.name;
         document.getElementById('level').innerHTML = 'level ' + leagueData.summonerLevel;
+        document.getElementById('level').appendChild(document.createElement("BR"))  // line break
 
         var apiMatchCall = 'https://na1.api.riotgames.com/lol/match/v4/matchlists/by-account/' + leagueData.accountId
         + '?champion=' + championID.toString() + '&queue=420&endTime=' + currTime.toString() + '&beginTime=' + beginTime.toString() + '&api_key=' + k;
-        console.log(apiMatchCall)
+
         return fetch(apiMatchCall, { mode: 'cors'});
       }).then(response => {
         return response.json();
@@ -61,6 +62,70 @@
         }
         else {
           document.getElementById('gamesPlayed').innerHTML = summName + ' has played ' + summonerMatches.totalGames + ' games on Evelynn in the last 7 days';
+
+          // get all of the recent games in last 7 days
+          const promises = []
+          for(i = 0; i < summonerMatches.totalGames; i++) {
+            var id = summonerMatches.matches[i].gameId
+            var gameCall = 'https://na1.api.riotgames.com/lol/match/v4/matches/' + id + '?api_key=' + k;
+            
+            promises[i] = fetch(gameCall, { mode: 'cors'})
+            .then(response => {
+              return response.json()
+            }).then(game => {
+              var partID;
+              var kda;
+              var win;
+
+              for(p of game.participantIdentities) {
+                if (p.player.summonerName === summName) partID = p.participantId
+              }
+              
+              for (p of game.participants) {
+                if (p.participantId === partID) {
+                  var kills = p.stats.kills
+                  var deaths = p.stats.deaths
+                  var assists = p.stats.assists
+
+                  win = p.stats.win
+
+                  kda = (kills + assists) / deaths;
+                }
+              }
+
+              return res = {kda: kda, win: win};
+            })
+          }
+
+          Promise.all(promises)
+          .then(values => {
+            var avgKDA = 0;
+            var avgWin = 0;
+
+            for (x of values) {
+              // round kda to 2 digits
+              val = x.kda * Math.pow(10, 2)
+              val = Math.round(val)
+              val = val / Math.pow(10, 2)
+
+              avgKDA = avgKDA + val
+
+              if (x.win === true) avgWin++
+
+              var div = document.getElementById('gamesPlayed')
+              div.appendChild(document.createElement("BR"))
+              div.appendChild(document.createTextNode("kda: " + val))
+            }
+            avgKDA = avgKDA / values.length // calculate average kda over games
+            avgWin = avgWin / values.length * 100 // calculate win% over games
+
+            var d = document.getElementById('gamesPlayed')
+            d.appendChild(document.createElement("BR"))
+            d.appendChild(document.createElement("BR"))
+            d.appendChild(document.createTextNode("Average kda: " + avgKDA))
+            d.appendChild(document.createElement("BR"))
+            d.appendChild(document.createTextNode("Win %: " + avgWin))
+          })
         }
       })
 
