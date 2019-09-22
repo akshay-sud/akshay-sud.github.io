@@ -24,7 +24,7 @@
       var beginTime = currTime - 604800000
       var k;
 
-      var api1 = 'https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/';
+      var api1 = 'https://cors-anywhere.herokuapp.com/https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/';
       var api2 = '?api_key=';
       var summName = document.getElementById("textbox").value;
       
@@ -50,7 +50,7 @@
         document.getElementById('level').innerHTML = 'level ' + leagueData.summonerLevel;
         document.getElementById('level').appendChild(document.createElement("BR"))  // line break
 
-        var apiMatchCall = 'https://na1.api.riotgames.com/lol/match/v4/matchlists/by-account/' + leagueData.accountId
+        var apiMatchCall = 'https://cors-anywhere.herokuapp.com/https://na1.api.riotgames.com/lol/match/v4/matchlists/by-account/' + leagueData.accountId
         + '?champion=' + championID.toString() + '&queue=420&endTime=' + currTime.toString() + '&beginTime=' + beginTime.toString() + '&api_key=' + k;
 
         return fetch(apiMatchCall, { mode: 'cors'});
@@ -67,7 +67,7 @@
           const promises = []
           for(i = 0; i < summonerMatches.totalGames; i++) {
             var id = summonerMatches.matches[i].gameId
-            var gameCall = 'https://na1.api.riotgames.com/lol/match/v4/matches/' + id + '?api_key=' + k;
+            var gameCall = 'https://cors-anywhere.herokuapp.com/https://na1.api.riotgames.com/lol/match/v4/matches/' + id + '?api_key=' + k;
             
             promises[i] = fetch(gameCall, { mode: 'cors'})
             .then(response => {
