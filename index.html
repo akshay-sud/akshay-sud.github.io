@@ -30,7 +30,7 @@
       
       var summNameCall = api1 + summName + api2;
 
-      var championID = 28 // test with SAVE THE OCEAN
+      var championID = 102 // test with SAVE THE OCEAN
 
       var matchIDs;
 
@@ -61,7 +61,7 @@
           document.getElementById('gamesPlayed').innerHTML = 'No games played on this Champion in the last 7 days'
         }
         else {
-          document.getElementById('gamesPlayed').innerHTML = summName + ' has played ' + summonerMatches.totalGames + ' games on Evelynn in the last 7 days';
+          document.getElementById('gamesPlayed').innerHTML = summName + ' has played ' + summonerMatches.totalGames + ' games on Shyvana in the last 7 days';
 
           // get all of the recent games in last 7 days
           const promises = []
@@ -69,6 +69,7 @@
             var id = summonerMatches.matches[i].gameId
             var gameCall = 'https://cors-anywhere.herokuapp.com/https://na1.api.riotgames.com/lol/match/v4/matches/' + id + '?api_key=' + k;
             
+
             promises[i] = fetch(gameCall, { mode: 'cors'})
             .then(response => {
               return response.json()
@@ -126,6 +127,7 @@
             d.appendChild(document.createElement("BR"))
             d.appendChild(document.createTextNode("Win %: " + avgWin))
           })
+          
         }
       })
 
